@@ -1,0 +1,36 @@
+# Node
+node_modules/
+npm-debug.log*
+dist/
+
+# Java / Maven
+target/
+*.class
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Temporary files
+*.tmp
+*.swp
