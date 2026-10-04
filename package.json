@@ -1,0 +1,20 @@
+{
+  "name": "shopsphere-ecommerce",
+  "version": "1.0.0",
+  "description": "node -v  npm -v",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anita-raut1525/shopsphere-ecommerce.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anita-raut1525/shopsphere-ecommerce/issues"
+  },
+  "homepage": "https://github.com/anita-raut1525/shopsphere-ecommerce#readme"
+}

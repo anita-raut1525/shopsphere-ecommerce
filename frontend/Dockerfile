@@ -1,0 +1,30 @@
+
+# =============================================================
+# Dockerfile for frontend
+# =============================================================
+# Stage 1: Install dependencies
+
+FROM node:22-alpine AS builder 
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci 
+
+COPY . .
+
+# Stage 2: Build the application
+
+FROM node:22-alpine AS Production
+
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/server.js ./
+COPY --from=builder /app/public ./public
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

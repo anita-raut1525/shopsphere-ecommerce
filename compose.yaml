@@ -1,0 +1,54 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shopsphere-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shopsphere
+      MYSQL_USER: shopsphere_app
+      MYSQL_PASSWORD: ShopSphereApp@2026
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - shopsphere-network
+
+  backend:
+    build:
+      context: ./backend
+    image: shopsphere-backend:v1.0
+    container_name: shopsphere-backend
+    restart: always
+    environment:
+      MYSQL_HOST: shopsphere-mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: shopsphere
+      MYSQL_USER: shopsphere_app
+      MYSQL_PASSWORD: ShopSphereApp@2026
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+    networks:
+      - shopsphere-network
+
+  frontend:
+    build:
+      context: ./frontend
+    image: shopsphere-frontend:v1.0
+    container_name: shopsphere-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - shopsphere-network
+
+networks:
+  shopsphere-network:
+
+volumes:
+  mysql_data:
