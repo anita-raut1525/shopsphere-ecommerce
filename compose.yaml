@@ -49,6 +49,7 @@ services:
 
 networks:
   shopsphere-network:
+    name: shopsphere-network
 
 volumes:
   mysql_data:
