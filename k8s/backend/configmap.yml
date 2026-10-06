@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: backend-config
+  namespace: shopsphere
+
+data:
+  MYSQL_HOST: shopsphere-mysql
+  MYSQL_PORT: "3306"
+  MYSQL_DATABASE: shopsphere
