@@ -1,0 +1,32 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: backend-hpa
+  namespace: shopsphere
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend
+
+  minReplicas: 2
+  maxReplicas: 5
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+
+# HPA can also be created using the kubectl command line tool. The following command will create an HPA for the backend deployment, targeting 50% CPU utilization, with a minimum of 2 replicas and a maximum of 5 replicas:
+
+ # kubectl autoscale deployment backend \
+  #--cpu-percent=50 \
+  #--min=2 \
+  #--max=5 \
+  #-n shopsphere         

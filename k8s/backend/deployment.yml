@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: backend
   namespace: shopsphere
@@ -24,11 +25,39 @@ spec:
           ports:
             - containerPort: 8081
 
-          imagePullPolicy: Always # Always pull the image if it is not present on the node
+          imagePullPolicy: Always
 
           envFrom:
             - configMapRef:
                 name: backend-config
-
             - secretRef:
                 name: backend-secret
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            failureThreshold: 20
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
