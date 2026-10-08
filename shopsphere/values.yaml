@@ -9,13 +9,19 @@ backend:
   port: 8081
 
   mysql:
+    username: shopsphere_app
     password: "ShopSphereApp@2026"
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
 
   resources:
     requests:
       cpu: "100m"
       memory: "128Mi"
-
     limits:
       cpu: "500m"
       memory: "512Mi"
