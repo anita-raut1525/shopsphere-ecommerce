@@ -1,0 +1,140 @@
+---
+# Source: shopsphere/templates/backend-secret.yml
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: backend-secret
+  namespace: shopsphere
+
+type: Opaque
+
+stringData:
+  MYSQL_USER: shopsphere_app
+  MYSQL_PASSWORD: "ShopSphereApp@2026"
+---
+# Source: shopsphere/templates/backend-configmap.yml
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: backend-config
+  namespace: shopsphere
+
+data:
+  MYSQL_HOST: shopsphere-mysql
+  MYSQL_PORT: "3306"
+  MYSQL_DATABASE: shopsphere
+---
+# Source: shopsphere/templates/backend-service.yml
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: backend
+  namespace: shopsphere
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: backend
+
+  ports:
+    - port: 8081
+      targetPort: 8081
+      protocol: TCP
+      name: http
+---
+# Source: shopsphere/templates/backend-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: backend
+  namespace: shopsphere
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+
+    spec:
+      containers:
+        - name: backend
+
+          image: "anitaraut/shopsphere-backend:v1"
+
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8081
+
+          envFrom:
+            - configMapRef:
+                name: backend-config
+
+            - secretRef:
+                name: backend-secret
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            failureThreshold: 20
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+# Source: shopsphere/templates/backend-hpa.yml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: backend
+  namespace: shopsphere
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend
+
+  minReplicas: 2
+  maxReplicas: 5
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
