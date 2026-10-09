@@ -17,9 +17,9 @@ spec:
       containers:
         - name: frontend
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.frontend.containerPort }}
-          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           livenessProbe:
             httpGet:
               path: {{ .Values.frontend.healthPath }}

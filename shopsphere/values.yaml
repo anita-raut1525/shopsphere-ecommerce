@@ -1,3 +1,7 @@
+# ======================================================
+# BACKEND CONFIGURATION
+# ======================================================
+
 backend:
   replicaCount: 2
 
@@ -25,3 +29,26 @@ backend:
     limits:
       cpu: "500m"
       memory: "512Mi"
+
+# ======================================================
+# FRONTEND CONFIGURATION
+# ======================================================
+      
+frontend:
+  replicaCount: 2
+
+  image:
+    repository: anitaraut/shopsphere-frontend
+    tag: "v1"
+    pullPolicy: Always
+
+  containerPort: 3000
+  healthPath: /health
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+
+
+  
